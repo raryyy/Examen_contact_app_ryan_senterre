@@ -1,12 +1,29 @@
+import { reactive, watch } from "vue";
 import { defineStore } from "pinia";
 
-export const useContactsStore = defineStore("contacts", {
-  state: () => ({
-    contacts: JSON.parse(localStorage.getItem("contacts")) || [
-      { id: 1, name: "John Doe", email: "john@gmail.com", phone: "123-456-7890" },
-      { id: 2, name: "Jane Doe", email: "jane@gmail.com", phone: "098-765-4321" },
-      { id: 3, name: "Jason Doe", email: "jane@gmail.com", phone: "098-765-4321" },
-    ],
-  })
-  
+export const useContactsStore = defineStore("contacts", () => {
+  if (!localStorage.getItem("contacts")) {
+    localStorage.setItem(
+      "contacts",
+      JSON.stringify([
+        { id: 1, name: "John Doe", email: "john.doe@example.com", phone: "123-456-7890" },
+        { id: 2, name: "Jane Doe", email: "jane.doe@example.com", phone: "098-765-4321" },
+      ])
+    );
+  }
+  const contacts = reactive(JSON.parse(localStorage.getItem("contacts")));
+
+  const addContact = (contact) => {
+    contacts.unshift(contact);
+  };
+
+  watch(
+    () => contacts,
+    (newContacts) => {
+      localStorage.setItem("contacts", JSON.stringify(newContacts));
+    },
+    { deep: true }
+  );
+
+  return { contacts, addContact };
 });
