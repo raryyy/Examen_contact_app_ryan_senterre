@@ -9,7 +9,7 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: '/add-contact',
+    path: '/add-contact/:id?',
     name: 'AddContact',
     component: AddContact,
   },

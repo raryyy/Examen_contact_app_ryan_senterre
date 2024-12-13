@@ -1,9 +1,17 @@
 <script setup>
+import { useRouter } from 'vue-router';
+
 const props = defineProps({
   contact: {
-    type: Object
+    type: Object,
   },
 });
+
+const router = useRouter();
+
+const goToEditContact = (contactId) => {
+  router.push({ name: 'AddContact', params: { id: contactId } });
+};
 </script>
 
 <template>
@@ -15,6 +23,7 @@ const props = defineProps({
     </div>
     <div class="flex gap-2">
       <button
+        @click="goToEditContact(contact.id)"
         class="bg-yellow-400 text-white px-4 py-2 rounded shadow hover:bg-yellow-500"
       >
         Edit

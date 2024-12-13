@@ -17,6 +17,13 @@ export const useContactsStore = defineStore("contacts", () => {
     contacts.unshift(contact);
   };
 
+  const updateContact = (updatedContact) => {
+    const index = contacts.findIndex(c => c.id === updatedContact.id);
+    if (index !== -1) {
+      contacts[index] = updatedContact;
+    }
+  };
+
   watch(
     () => contacts,
     (newContacts) => {
@@ -25,5 +32,5 @@ export const useContactsStore = defineStore("contacts", () => {
     { deep: true }
   );
 
-  return { contacts, addContact };
+  return { contacts, addContact, updateContact };
 });
