@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import { useContactsStore } from '@/stores/contacts';
 
 const props = defineProps({
   contact: {
@@ -8,9 +9,13 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const contactsStore = useContactsStore();
 
 const goToEditContact = (contactId) => {
   router.push({ name: 'AddContact', params: { id: contactId } });
+};
+const deleteContact = (contactId) => {
+  contactsStore.deleteContact(contactId);
 };
 </script>
 
@@ -29,6 +34,7 @@ const goToEditContact = (contactId) => {
         Edit
       </button>
       <button
+        @click="deleteContact(contact.id)"
         class="bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600"
       >
         Delete
