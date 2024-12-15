@@ -1,6 +1,6 @@
 <script setup>
+import { useContactsStore } from "@/stores/contacts";
 import { useRouter } from 'vue-router';
-import { useContactsStore } from '@/stores/contacts';
 
 const props = defineProps({
   contact: {
@@ -8,14 +8,11 @@ const props = defineProps({
   },
 });
 
-const router = useRouter();
 const contactsStore = useContactsStore();
+const router = useRouter();
 
-const goToEditContact = (contactId) => {
-  router.push({ name: 'AddContact', params: { id: contactId } });
-};
-const deleteContact = (contactId) => {
-  contactsStore.deleteContact(contactId);
+const editContact = (id) => {
+  router.push({ name: 'AddContact', params: { id } });
 };
 </script>
 
@@ -28,13 +25,13 @@ const deleteContact = (contactId) => {
     </div>
     <div class="flex gap-2">
       <button
-        @click="goToEditContact(contact.id)"
+        @click="editContact(contact.id)"
         class="bg-yellow-400 text-white px-4 py-2 rounded shadow hover:bg-yellow-500"
       >
         Edit
       </button>
       <button
-        @click="deleteContact(contact.id)"
+        @click.prevent="contactsStore.deleteOneById(contact.id)"
         class="bg-red-500 text-white px-4 py-2 rounded shadow hover:bg-red-600"
       >
         Delete

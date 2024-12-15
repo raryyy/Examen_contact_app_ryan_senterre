@@ -1,18 +1,24 @@
 <script setup>
-import { reactive, watch, onMounted } from "vue";
+import { reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useContactsStore } from "@/stores/contacts";
 
-const newContact = reactive({ id: null, name: null, email: null, phone: null });
-const contactsStore = useContactsStore();
+const newContact = reactive({
+  id: null,
+  name: "",
+  email: "",
+  phone: "",
+});
+
 const router = useRouter();
 const route = useRoute();
-
-const isEdit = route.params.id !== undefined;
+const contactsStore = useContactsStore();
 
 onMounted(() => {
-  if (isEdit) {
-    const contact = contactsStore.contacts.find(c => c.id == route.params.id);
+  if (route.params.id) {
+    const contact = contactsStore.contacts.find(
+      (contact) => contact.id === parseInt(route.params.id)
+    );
     if (contact) {
       newContact.id = contact.id;
       newContact.name = contact.name;
@@ -23,12 +29,18 @@ onMounted(() => {
 });
 
 const saveContact = () => {
-  if (isEdit) {
-    contactsStore.updateContact(newContact);
+  if (newContact.id) {
+
+    contactsStore.updateContact({ ...newContact });
   } else {
     newContact.id = Date.now();
     contactsStore.addContact({ ...newContact });
   }
+
+  newContact.name = "";
+  newContact.email = "";
+  newContact.phone = "";
+
   router.push({ name: "Dashboard" });
 };
 </script>
@@ -37,7 +49,9 @@ const saveContact = () => {
   <main class="container mx-auto px-4 mt-6 flex-grow">
     <div class="flex flex-col lg:flex-row gap-6">
       <section class="w-full lg:w-1/3 bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">{{ isEdit ? 'Edit' : 'Add' }} Contact</h2>
+        <h2 class="text-xl font-semibold mb-4">
+          {{ newContact.id ? 'Edit' : 'Add' }} Contact
+        </h2>
         <form @submit.prevent="saveContact" class="space-y-4">
           <div>
             <label for="name" class="block font-bold">Name:</label>
@@ -76,7 +90,7 @@ const saveContact = () => {
             type="submit"
             class="w-full bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
           >
-            {{ isEdit ? 'Update' : 'Save' }} Contact
+            {{ newContact.id ? 'Update Contact' : 'Save Contact' }}
           </button>
         </form>
       </section>
