@@ -1,4 +1,4 @@
-import { reactive, watch } from "vue";
+import { reactive, computed, watch } from "vue";
 import { defineStore } from "pinia";
 
 export const useContactsStore = defineStore("contacts", () => {
@@ -13,6 +13,19 @@ export const useContactsStore = defineStore("contacts", () => {
   }
 
   const contacts = reactive(JSON.parse(localStorage.getItem("contacts")));
+  const searchQuery = reactive({ value: "" });
+
+  const filteredContacts = computed(() => {
+    if (!searchQuery.value) return contacts;
+
+    return contacts.filter(contact => {
+      const searchLower = searchQuery.value.toLowerCase();
+      return (
+        contact.name.toLowerCase().includes(searchLower) ||
+        contact.email.toLowerCase().includes(searchLower)
+      );
+    });
+  });
 
   const addContact = (contact) => {
     contacts.unshift(contact);
@@ -40,5 +53,5 @@ export const useContactsStore = defineStore("contacts", () => {
     { deep: true }
   );
 
-  return { contacts, addContact, updateContact, deleteOneById };
+  return { contacts, searchQuery, filteredContacts, addContact, updateContact, deleteOneById };
 });

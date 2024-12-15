@@ -22,17 +22,18 @@ const stopEditing = () => {
       <section class="w-full lg:w-2/3 bg-white rounded-lg shadow p-6">
         <h2 class="text-xl mb-4 flex justify-between">
           <span class="font-semibold">Contacts</span>
-          <span class="text-sm">{{ contactsStore.contacts.length }} item(s)</span>
+          <span class="text-sm">{{ contactsStore.filteredContacts.length }} item(s)</span>
         </h2>
         <div class="flex items-center mb-4">
           <input
+            v-model="contactsStore.searchQuery.value"
             type="text"
             placeholder="Search contacts..."
             class="w-full p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <ContactsList
-          :contacts="contactsStore.contacts"
+          :contacts="contactsStore.filteredContacts"
           @edit-contact="startEditing"
         />
       </section>
