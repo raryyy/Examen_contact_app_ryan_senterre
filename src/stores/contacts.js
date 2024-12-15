@@ -1,7 +1,9 @@
 import { reactive, computed, watch } from "vue";
 import { defineStore } from "pinia";
+import { toast } from "vue3-toastify";
 
 export const useContactsStore = defineStore("contacts", () => {
+
   if (!localStorage.getItem("contacts")) {
     localStorage.setItem(
       "contacts",
@@ -29,21 +31,29 @@ export const useContactsStore = defineStore("contacts", () => {
 
   const addContact = (contact) => {
     contacts.unshift(contact);
+    toast.success("Contact ajouté avec succès !");
   };
 
   const updateContact = (updatedContact) => {
     const index = contacts.findIndex(contact => contact.id === updatedContact.id);
     if (index !== -1) {
       contacts[index] = updatedContact;
+      toast.success("Contact mis à jour avec succès !");
+    } else {
+      toast.error("Erreur de mise à jour du contact.");
     }
   };
 
   const deleteOneById = (id) => {
-    contacts.splice(
-      contacts.findIndex((item) => item.id == id),
-      1
-    );
+    const index = contacts.findIndex((item) => item.id == id);
+    if (index !== -1) {
+      contacts.splice(index, 1);
+      toast.success("Contact supprimé avec succès.");
+    } else {
+      toast.error("Erreur lors de la suppression du contact.");
+    }
   };
+
 
   watch(
     () => contacts,
@@ -52,6 +62,7 @@ export const useContactsStore = defineStore("contacts", () => {
     },
     { deep: true }
   );
+
 
   return { contacts, searchQuery, filteredContacts, addContact, updateContact, deleteOneById };
 });

@@ -2,6 +2,8 @@
 import { useRouter } from 'vue-router';
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
+import Toastify from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
   name: "App",
@@ -28,7 +30,8 @@ export default {
     <AppHeader />
     <main>
       <router-view />
-    </main>
+    </main>      
+    <Toastify.ToastContainer />
     <AppFooter />
   </div>
 </template>
